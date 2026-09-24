@@ -1,0 +1,23 @@
+{
+  "total_limpo": 126425,
+  "distribuicao_original": {
+    "positivo": 78323,
+    "negativo": 32313,
+    "neutro": 15789
+  },
+  "train": {
+    "neutro": 1000,
+    "negativo": 1000,
+    "positivo": 1000
+  },
+  "val": {
+    "positivo": 100,
+    "neutro": 100,
+    "negativo": 100
+  },
+  "test": {
+    "negativo": 200,
+    "positivo": 200,
+    "neutro": 200
+  }
+}

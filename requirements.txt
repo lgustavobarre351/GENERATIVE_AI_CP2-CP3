@@ -1,0 +1,13 @@
+# No Colab o PyTorch com CUDA já vem instalado.
+# Em PC local com NVIDIA, instale antes o torch da versão CUDA certa (ver docs/GPU_VSCODE.md).
+torch>=2.4
+transformers>=5.0,<6
+peft>=0.17
+accelerate>=1.0
+datasets>=3.0
+huggingface_hub>=0.30
+pandas
+pyarrow
+scikit-learn
+matplotlib
+gradio>=5

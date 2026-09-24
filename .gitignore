@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+# Pesos dos adaptadores e checkpoints (grandes demais para o git; ficam no Google Drive)
+outputs/
+# Dataset é baixado pelo src/data.py
+data/*.jsonl
+data/*.parquet
+.gradio/
