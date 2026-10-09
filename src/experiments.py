@@ -23,7 +23,7 @@ EXPERIMENTS = {
     "r64_lr2e-4":       ["--lora_r", "64", "--lr", "2e-4", "--epochs", "1"],
     "r16_lr2e-5":       ["--lora_r", "16", "--lr", "2e-5", "--epochs", "1"],
     "r16_lr1e-3":       ["--lora_r", "16", "--lr", "1e-3", "--epochs", "1"],
-    "r16_lr2e-4_ep3":   ["--lora_r", "16", "--lr", "2e-4", "--epochs", "3"],
+    "r16_lr2e-4_ep2":   ["--lora_r", "16", "--lr", "2e-4", "--epochs", "2"],
     "r16_lr2e-4_attn":  ["--lora_r", "16", "--lr", "2e-4", "--epochs", "1", "--target", "attn"],
 }
 
@@ -31,7 +31,8 @@ EXPERIMENTS = {
 def run(script: str, *args: str):
     cmd = [sys.executable, str(SRC / script), *args]
     print("\n$ " + " ".join(cmd), flush=True)
-    subprocess.run(cmd, check=True)
+    if subprocess.run(cmd).returncode != 0:
+        print(f"!! FALHOU: {' '.join(args)}", flush=True)
 
 
 def main():
@@ -48,6 +49,10 @@ def main():
         run("evaluate.py", "--name", "baseline_zero_shot", *quick_eval)
 
     for name in args.only or EXPERIMENTS:
+        # Permite pausar e retomar: experimentos já avaliados são pulados
+        if (RESULTS_DIR / f"{name}.json").exists():
+            print(f"\n>> {name} já concluído, pulando", flush=True)
+            continue
         run("train.py", "--run_name", name, *EXPERIMENTS[name], *quick_train)
         run("evaluate.py", "--name", name, "--adapter", str(OUTPUT_DIR / name), *quick_eval)
 

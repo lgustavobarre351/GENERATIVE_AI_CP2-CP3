@@ -1,0 +1,9 @@
+{
+  "python": "3.14.7",
+  "sistema": "Darwin 25.6.0",
+  "torch": "2.14.0",
+  "device": "mps",
+  "cuda_disponivel": false,
+  "gpu_nome": "Apple Silicon (Metal Performance Shaders)",
+  "benchmark_matmul_tflops": 11.7
+}

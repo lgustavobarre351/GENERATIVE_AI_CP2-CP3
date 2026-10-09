@@ -3,9 +3,10 @@ __pycache__/
 *.pyc
 .DS_Store
 .ipynb_checkpoints/
-# Pesos dos adaptadores e checkpoints (grandes demais para o git; ficam no Google Drive)
-outputs/
-# Dataset é baixado pelo src/data.py
-data/*.jsonl
-data/*.parquet
 .gradio/
+# Pesos dos adaptadores LoRA (grandes demais para o git, exceto o melhor, adicionado à parte)
+outputs/*/checkpoints/
+# Splits gerados pelo src/data.py (reprodutíveis com a seed)
+data/train.jsonl
+data/val.jsonl
+data/test.jsonl

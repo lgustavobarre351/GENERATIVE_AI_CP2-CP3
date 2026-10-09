@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "GPU: informações", "type": "shell", "command": "${workspaceFolder}/.venv/bin/python src/gpu_info.py", "problemMatcher": [] },
+    { "label": "GPU: monitor ao vivo", "type": "shell", "command": "${workspaceFolder}/.venv/bin/python src/gpu_monitor.py", "isBackground": true, "problemMatcher": [] },
+    { "label": "Gerar dados", "type": "shell", "command": "${workspaceFolder}/.venv/bin/python src/data.py", "problemMatcher": [] },
+    { "label": "Rodar todos os experimentos", "type": "shell", "command": "${workspaceFolder}/.venv/bin/python src/experiments.py", "problemMatcher": [] },
+    { "label": "Frontend (melhor modelo)", "type": "shell", "command": "${workspaceFolder}/.venv/bin/python app/app.py --adapter outputs/${input:adapter}", "problemMatcher": [] }
+  ],
+  "inputs": [
+    { "id": "adapter", "type": "promptString", "description": "Nome do experimento (pasta em outputs/)", "default": "r16_lr2e-4" }
+  ]
+}

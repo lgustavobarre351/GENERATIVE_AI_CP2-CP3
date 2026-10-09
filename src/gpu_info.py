@@ -35,8 +35,29 @@ def gpu_info() -> dict:
             "suporta_bf16": torch.cuda.is_bf16_supported(),
         })
     elif device == "mps":
-        info["gpu_nome"] = "Apple Silicon (Metal Performance Shaders)"
+        info.update(apple_gpu_info())
     return info
+
+
+def _sh(cmd: list[str]) -> str:
+    return subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+
+
+def apple_gpu_info() -> dict:
+    """Dados da GPU Apple Silicon (Metal), via system_profiler/sysctl, sem precisar de sudo."""
+    display = json.loads(_sh(["system_profiler", "SPDisplaysDataType", "-json"]) or "{}")
+    gpu = (display.get("SPDisplaysDataType") or [{}])[0]
+    return {
+        "macos": platform.mac_ver()[0],
+        "chip": _sh(["sysctl", "-n", "machdep.cpu.brand_string"]),
+        "gpu_nome": gpu.get("sppci_model", "Apple GPU"),
+        "gpu_nucleos": gpu.get("sppci_cores"),
+        "metal": gpu.get("spdisplays_mtlgpufamilysupport", "").replace("spdisplays_metal", "Metal "),
+        "backend_pytorch": "MPS (Metal Performance Shaders)",
+        "mps_compilado": torch.backends.mps.is_built(),
+        "memoria_unificada_gb": round(int(_sh(["sysctl", "-n", "hw.memsize"])) / 1024**3, 1),
+        "memoria_max_gpu_gb": round(torch.mps.recommended_max_memory() / 1024**3, 1),
+    }
 
 
 def benchmark(device: str, n: int = 4096, reps: int = 20) -> float:
