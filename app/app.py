@@ -113,7 +113,8 @@ def build_ui(model, tok, adapter: str | None, base_model: str = BASE_MODEL):
             gr.Markdown("Cole **uma avaliação por linha** para analisar em lote e ver o resumo por aspecto.")
             texts = gr.Textbox(label="Avaliações", lines=8, value="\n".join(EXAMPLES))
             batch_btn = gr.Button("Analisar todas", variant="primary")
-            table = gr.Dataframe(label="Resultado por avaliação", wrap=True)
+            table = gr.Dataframe(label="Resultado por avaliação", wrap=True,
+                                 column_widths=["45%"] + ["11%"] * len(ASPECTS))
             summary = gr.Dataframe(label="Resumo por aspecto")
             batch_btn.click(run_batch, texts, [table, summary])
 

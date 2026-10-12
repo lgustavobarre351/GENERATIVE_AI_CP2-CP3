@@ -76,7 +76,7 @@ def main():
     ax.set_xticks(range(len(ASPECTS)), ASPECTS)
     ax.set_ylim(0, 1)
     ax.set_title("F1 por aspecto (teste)")
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=8, loc="lower right")
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
     fig.savefig(RESULTS_DIR / "f1_por_aspecto.png", dpi=150)

@@ -99,7 +99,7 @@ pip install -r requirements.txt     # NVIDIA: instale antes o torch com CUDA (do
 python src/gpu_info.py              # confere a GPU
 python src/data.py                  # gera os dados
 python src/experiments.py           # baseline + 7 experimentos + comparação
-python app/app.py --adapter outputs/<melhor_experimento>   # frontend em http://localhost:7860
+python app/app.py --adapter outputs/r16_lr2e-4   # frontend com o melhor modelo em http://localhost:7860
 ```
 
 Comandos individuais:
@@ -141,7 +141,85 @@ As respostas de cada modelo para cada exemplo ficam em `results/<experimento>_<c
 
 ## 9. Resultados
 
-<!-- RESULTADOS -->
+Todos os experimentos rodaram na GPU do Apple M5 (Metal/MPS). O log completo está em `results/log_execucao.txt`.
+
+### Baseline × melhor modelo
+
+| Métrica | Qwen3-1.7B sem treino | Qwen3-1.7B + LoRA (`r16_lr2e-4`) |
+|---|---|---|
+| JSON válido (teste) | 100% | 100% |
+| **Acerto exato (teste, 400 frases inéditas)** | 25,5% | **83,0%** |
+| **F1 pares (teste)** | 0,514 | **0,926** |
+| F1 detecção de aspectos (teste) | 0,707 | 0,957 |
+| Acurácia de polaridade (teste) | 72,7% | 96,8% |
+| **Acerto exato (manual, 40 escritas à mão)** | 27,5% | **82,5%** |
+| **F1 pares (manual)** | 0,611 | **0,913** |
+| Tempo de inferência | 325 ms/avaliação | 365 ms/avaliação |
+
+O fine-tuning **triplicou o acerto exato** (25% → 83%), e o ganho se mantém no teste manual, com linguagem bem
+diferente da usada no treino. Ou seja, o modelo não apenas decorou as frases do gerador.
+
+### Todos os experimentos
+
+| Experimento | LoRA r | Camadas | LR | Épocas | Params treináveis | Tempo de treino | Loss val | Acerto exato | F1 pares (teste) | F1 pares (manual) | Acerto exato (manual) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| **r16_lr2e-4** (referência) | 16 | todas | 2e-4 | 1 | 17,4M (1,0%) | 32 min | 0,0004 | 83,0% | **0,926** | **0,913** | 82,5% |
+| r64_lr2e-4 | 64 | todas | 2e-4 | 1 | 69,7M (4,0%) | 32 min | 0,0005 | 83,2% | 0,923 | 0,878 | 77,5% |
+| r16_lr2e-4_ep2 | 16 | todas | 2e-4 | 2 | 17,4M | 64 min | 0,0002 | 83,2% | 0,920 | 0,905 | 82,5% |
+| r16_lr2e-4_attn | 16 | atenção | 2e-4 | 1 | 6,4M (0,4%) | 25 min | 0,0055 | 82,5% | 0,919 | 0,913 | 85,0% |
+| r4_lr2e-4 | 4 | todas | 2e-4 | 1 | 4,4M (0,3%) | 29 min | 0,0062 | 80,5% | 0,911 | 0,870 | 75,0% |
+| r16_lr1e-3 | 16 | todas | 1e-3 | 1 | 17,4M | 32 min | 0,0005 | 76,8% | 0,889 | 0,835 | 67,5% |
+| r16_lr2e-5 | 16 | todas | 2e-5 | 1 | 17,4M | 30 min | 0,0619 | 61,8% | 0,831 | 0,837 | 65,0% |
+| baseline_zero_shot | — | — | — | — | — | — | — | 25,5% | 0,514 | 0,611 | 27,5% |
+
+![Comparação](results/comparacao.png)
+![F1 por aspecto](results/f1_por_aspecto.png)
+![Curvas de loss](results/curvas_loss.png)
+
+| Matriz de confusão da polaridade: sem treino | Matriz de confusão da polaridade: `r16_lr2e-4` |
+|---|---|
+| ![](results/baseline_zero_shot_confusao.png) | ![](results/r16_lr2e-4_confusao.png) |
+
+### Conclusões sobre os parâmetros
+
+- **Learning rate foi o parâmetro mais importante.** Com 2e-5, o modelo mal aprendeu em 1 época (loss de validação
+  100× maior, acerto exato de 62%). Com 1e-3, a loss caiu tanto quanto na referência, mas a generalização piorou
+  (F1 manual de 0,835): o modelo se ajustou demais ao padrão do gerador. **2e-4 foi o melhor equilíbrio.**
+- **Rank do LoRA:** r=4 tem pouca capacidade (F1 0,911). r=64 tem 4× mais parâmetros que r=16 e não melhora no teste,
+  além de generalizar pior no teste manual (0,878). **r=16 é o ponto ideal.**
+- **Épocas:** a 2ª época dobrou o tempo e reduziu a loss de validação, mas não melhorou o teste. É sinal de que, depois
+  da 1ª época, o modelo passa a decorar o conjunto de treino.
+- **Camadas:** LoRA só na atenção, com 37% dos parâmetros e o treino mais rápido (25 min), ficou praticamente empatado
+  com a referência e teve o melhor acerto exato no teste manual (85%). É uma boa opção quando o tempo de GPU é limitado.
+- **Loss de validação baixa não garante generalização:** `r16_lr1e-3` e `r16_lr2e-4_ep2` tiveram as menores losses e
+  não foram os melhores. Por isso a escolha do modelo foi feita pelas métricas de teste, e não pela loss.
+
+### Análise das respostas (erros do melhor modelo)
+
+Dos 40 exemplos do teste manual, o `r16_lr2e-4` errou 7 (o modelo sem treino errou 29). Os erros são, na maioria,
+casos **ambíguos na fronteira do "neutro"**:
+
+| Avaliação | Esperado | Previsto |
+|---|---|---|
+| "Entrega no prazo, produto ok. Nada a declarar." | entrega: neutro | entrega: positivo |
+| "Prazo de entrega longo, 15 dias úteis, mas cumpriram." | entrega: neutro | entrega: negativo |
+| "O chat demorou um pouco pra responder mas resolveram meu problema." | atendimento: positivo | atendimento: neutro |
+| "Preço justo, qualidade ok, entrega normal." | preço: positivo | preço: neutro |
+| "Fiz a compra pelo app, foi tranquilo." | {} | atendimento: neutro |
+| "Ótimo! Uso todos os dias." | qualidade: positivo | {} |
+
+Sem treino, os erros eram mais graves: o modelo omitia aspectos claros ("Bateria do celular não aguenta meio dia" → `{}`),
+trocava polaridade ("Paguei quase 500 reais... Não compensa" → preço: positivo) e listava os 5 aspectos como "neutro"
+em avaliações sem nenhum aspecto ("Meu marido gostou.").
+
+No teste sintético, a maioria dos erros vem de **armadilhas de vocabulário** em frases que o modelo nunca viu:
+
+- "atende o básico" (sobre qualidade) apareceu em 31 dos 34 casos de "qualidade omitida". O modelo associa a palavra
+  "**atende**" ao aspecto *atendimento* e responde `atendimento: neutro` no lugar de `qualidade: neutro`.
+- "é caro demais pelo que **entrega**" (sobre preço) faz o modelo marcar também o aspecto *entrega*.
+
+Ou seja, o modelo ainda se apoia em palavras-chave em alguns casos. Mais variedade de frases no treino, como exemplos
+em que "atender" e "entregar" não se referem a esses aspectos, seria o próximo passo para corrigir isso.
 
 ## 10. Frontend
 
@@ -155,10 +233,11 @@ Interface em **Gradio** (`app/app.py`), com quatro abas:
 4. **Modelo e GPU:** informações da GPU e da configuração de treino.
 
 ![Frontend](docs/img/frontend.png)
+![Frontend — análise em lote](docs/img/frontend_lote.png)
 
 ## 11. GPU
 
-Executado na **GPU do Apple M5 (Metal 4, 8 núcleos, 16 GB de memória unificada)** via PyTorch MPS. O código também roda
+Executado na **GPU do Apple M5 (Metal 4, 8 núcleos, 16 GB de memória unificada)** via PyTorch MPS. O uso de Metal no lugar de CUDA foi autorizado pelo professor. O código também roda
 em NVIDIA/CUDA sem alterações. Veja em [docs/GPU_VSCODE.md](docs/GPU_VSCODE.md) a configuração, a comparação
 Metal × CUDA e como gerar o print.
 

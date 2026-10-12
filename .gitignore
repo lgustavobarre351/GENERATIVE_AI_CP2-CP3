@@ -4,8 +4,10 @@ __pycache__/
 .DS_Store
 .ipynb_checkpoints/
 .gradio/
-# Pesos dos adaptadores LoRA (grandes demais para o git, exceto o melhor, adicionado à parte)
-outputs/*/checkpoints/
+# Adaptadores LoRA: só o melhor (r16_lr2e-4) vai para o repositório
+outputs/*
+!outputs/r16_lr2e-4/
+outputs/r16_lr2e-4/checkpoints/
 # Splits gerados pelo src/data.py (reprodutíveis com a seed)
 data/train.jsonl
 data/val.jsonl

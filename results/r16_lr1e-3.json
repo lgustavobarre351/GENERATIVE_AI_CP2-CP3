@@ -1,0 +1,117 @@
+{
+  "name": "r16_lr1e-3",
+  "adapter": "/Users/luisao/Documents/CP_IA/outputs/r16_lr1e-3",
+  "device": "mps:0",
+  "train": {
+    "run_name": "r16_lr1e-3",
+    "params": {
+      "run_name": "r16_lr1e-3",
+      "base_model": "Qwen/Qwen3-1.7B",
+      "lora_r": 16,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "target": "all",
+      "lr": 0.001,
+      "epochs": 1.0,
+      "batch_size": 4,
+      "grad_accum": 4,
+      "max_len": 320,
+      "no_grad_ckpt": false,
+      "train_limit": null,
+      "val_limit": null
+    },
+    "device": "mps",
+    "gpu": "mps",
+    "dtype": "torch.bfloat16",
+    "trainable_params": 17432576,
+    "total_params": 1738007552,
+    "train_examples": 2000,
+    "train_time_s": 1924.5,
+    "train_loss": 0.0534,
+    "final_eval_loss": 0.0005,
+    "peak_gpu_mem_gb": null
+  },
+  "sets": {
+    "teste": {
+      "n": 400,
+      "json_valido": 1.0,
+      "acerto_exato": 0.7675,
+      "pares": {
+        "precisao": 0.8883,
+        "recall": 0.8894,
+        "f1": 0.8889
+      },
+      "deteccao_aspectos": {
+        "precisao": 0.9515,
+        "recall": 0.9526,
+        "f1": 0.952
+      },
+      "acuracia_polaridade": 0.9337,
+      "f1_por_aspecto": {
+        "entrega": 0.9416,
+        "qualidade": 0.8733,
+        "preço": 0.881,
+        "atendimento": 0.913,
+        "embalagem": 0.8358
+      },
+      "matriz_polaridade": [
+        [
+          233,
+          2,
+          18
+        ],
+        [
+          26,
+          225,
+          5
+        ],
+        [
+          0,
+          1,
+          274
+        ]
+      ]
+    },
+    "manual": {
+      "n": 40,
+      "json_valido": 1.0,
+      "acerto_exato": 0.675,
+      "pares": {
+        "precisao": 0.8286,
+        "recall": 0.8406,
+        "f1": 0.8345
+      },
+      "deteccao_aspectos": {
+        "precisao": 0.9143,
+        "recall": 0.9275,
+        "f1": 0.9209
+      },
+      "acuracia_polaridade": 0.9062,
+      "f1_por_aspecto": {
+        "entrega": 0.8387,
+        "qualidade": 0.8837,
+        "preço": 0.8333,
+        "atendimento": 0.7826,
+        "embalagem": 0.7778
+      },
+      "matriz_polaridade": [
+        [
+          28,
+          0,
+          1
+        ],
+        [
+          2,
+          20,
+          1
+        ],
+        [
+          1,
+          1,
+          10
+        ]
+      ]
+    }
+  },
+  "ms_por_exemplo": 371.5
+}
