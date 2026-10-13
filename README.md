@@ -5,9 +5,11 @@ parâmetros, avaliar as respostas e disponibilizar um frontend para o usuário c
 
 ## Integrantes do grupo
 
-- Julia Azevedo Lins — RM98690
-- Luis Gustavo Barreto Garrido — RM99210
-- Victor Hugo Aranda Forte — RM99667
+- Felipe Cortez — RM99750
+- Julia Lins — RM98690
+- Luis Barreto — RM99210
+- Victor Aranda — RM99667
+- Guilherme Akio — RM98582
 
 ---
 
