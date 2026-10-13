@@ -3,7 +3,11 @@
 Trabalho CP2/CP3 (4ESPY-2026): treinar uma LLM local em GPU para resolver um problema específico, testar diferentes
 parâmetros, avaliar as respostas e disponibilizar um frontend para o usuário criar o prompt.
 
-**Integrantes:** _Nome 1 (RM) · Nome 2 (RM) · Nome 3 (RM) · Nome 4 (RM) · Nome 5 (RM)_
+## Integrantes do grupo
+
+- Julia Azevedo Lins — RM98690
+- Luis Gustavo Barreto Garrido — RM99210
+- Victor Hugo Aranda Forte — RM99667
 
 ---
 
