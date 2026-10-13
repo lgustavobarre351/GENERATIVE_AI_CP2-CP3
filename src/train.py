@@ -135,7 +135,6 @@ def main(argv=None):
     train_time = time.time() - t0
 
     model.save_pretrained(out_dir)
-    tok.save_pretrained(out_dir)
     info = {
         "run_name": args.run_name,
         "params": vars(args),
