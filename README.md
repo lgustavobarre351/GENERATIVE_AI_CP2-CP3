@@ -94,7 +94,9 @@ avaliação ──► prompt (system + chat template do Qwen3) ──► Qwen3-1
 ├── data/teste_manual.jsonl   # 40 avaliações escritas à mão
 ├── results/             # métricas (.json), respostas (.csv), gráficos (.png), log da execução
 ├── outputs/             # adaptador LoRA do melhor experimento
+├── docs/Relatorio_CP2_CP3.pdf   # relatório completo do trabalho
 ├── docs/GPU_VSCODE.md   # GPU (Metal/CUDA), VSCode e print
+├── docs/img/            # prints da GPU no VSCode e do frontend
 └── .vscode/tasks.json   # tarefas prontas: info da GPU, monitor, experimentos, frontend
 ```
 
@@ -164,7 +166,7 @@ Todos os experimentos rodaram na GPU do Apple M5 (Metal/MPS). O log completo est
 | **F1 pares (manual)** | 0,611 | **0,913** |
 | Tempo de inferência | 325 ms/avaliação | 365 ms/avaliação |
 
-O fine-tuning **triplicou o acerto exato** (25% → 83%), e o ganho se mantém no teste manual, com linguagem bem
+O fine-tuning **mais que triplicou o acerto exato** (25,5% → 83,0%), e o ganho se mantém no teste manual, com linguagem bem
 diferente da usada no treino. Ou seja, o modelo não apenas decorou as frases do gerador.
 
 ### Todos os experimentos
@@ -245,8 +247,8 @@ Interface em **Gradio** (`app/app.py`), com quatro abas:
 
 ## 11. GPU
 
-Executado na **GPU do Apple M5 (Metal 4, 8 núcleos, 16 GB de memória unificada)** via PyTorch MPS. O uso de Metal no lugar de CUDA foi autorizado pelo professor. O código também roda
-em NVIDIA/CUDA sem alterações. Veja em [docs/GPU_VSCODE.md](docs/GPU_VSCODE.md) a configuração, a comparação
+Executado na **GPU do Apple M5 (Metal 4, 8 núcleos, 16 GB de memória unificada)** via PyTorch MPS. O uso de Metal no
+lugar de CUDA foi autorizado pelo professor. O código também roda em NVIDIA/CUDA sem alterações. Veja em [docs/GPU_VSCODE.md](docs/GPU_VSCODE.md) a configuração, a comparação
 Metal × CUDA e como gerar o print.
 
 ![GPU no VSCode](docs/img/gpu_vscode.png)
