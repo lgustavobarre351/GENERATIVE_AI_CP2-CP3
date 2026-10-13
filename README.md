@@ -5,11 +5,9 @@ parâmetros, avaliar as respostas e disponibilizar um frontend para o usuário c
 
 ## Integrantes do grupo
 
-- Felipe Cortez — RM99750
 - Julia Lins — RM98690
 - Luis Barreto — RM99210
 - Victor Aranda — RM99667
-- Guilherme Akio — RM98582
 
 📄 **Relatório completo em PDF:** [docs/Relatorio_CP2_CP3.pdf](docs/Relatorio_CP2_CP3.pdf)
 
