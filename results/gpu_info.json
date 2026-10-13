@@ -4,6 +4,14 @@
   "torch": "2.14.0",
   "device": "mps",
   "cuda_disponivel": false,
-  "gpu_nome": "Apple Silicon (Metal Performance Shaders)",
-  "benchmark_matmul_tflops": 11.7
+  "macos": "26.6",
+  "chip": "Apple M5",
+  "gpu_nome": "Apple M5",
+  "gpu_nucleos": "8",
+  "metal": "Metal 4",
+  "backend_pytorch": "MPS (Metal Performance Shaders)",
+  "mps_compilado": true,
+  "memoria_unificada_gb": 16.0,
+  "memoria_max_gpu_gb": 11.8,
+  "benchmark_matmul_tflops": 12.45
 }

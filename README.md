@@ -11,6 +11,8 @@ parâmetros, avaliar as respostas e disponibilizar um frontend para o usuário c
 - Victor Aranda — RM99667
 - Guilherme Akio — RM98582
 
+📄 **Relatório completo em PDF:** [docs/Relatorio_CP2_CP3.pdf](docs/Relatorio_CP2_CP3.pdf)
+
 ---
 
 ## 1. Problema: sentimento por aspecto
